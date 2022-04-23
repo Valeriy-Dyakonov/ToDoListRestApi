@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User saveUser(User user) {
+        if (userDao.findByLogin(user.getLogin()) != null) {
+            throw new IllegalStateException(String.format("Login [%s] already exists", user.getLogin()));
+        }
         Role userRole = roleDao.findByName("ROLE_USER");
         user.setRole(userRole);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
